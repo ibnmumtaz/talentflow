@@ -1,0 +1,6 @@
+@extends('layouts.dashboard', ['heading' => 'Talent pool', 'subheading' => 'Strong candidates from previous applications — shortlisted, interviewed or offered.'])
+@section('dashboard')
+<form method="GET" class="glass flex gap-2 rounded-2xl p-3"><input name="q" value="{{ request('q') }}" placeholder="Search by name" class="input-glass flex-1"><button class="btn-ghost rounded-xl px-4 py-2 text-sm">Search</button></form>
+@if($pool->isEmpty())<div class="mt-6"><x-empty-state title="Talent pool is empty" message="Candidates you shortlist or interview will appear here for future roles." /></div>
+@else<div class="mt-6 grid gap-4 md:grid-cols-2">@foreach($pool as $a)<div class="glass rounded-2xl p-5"><p class="font-semibold">{{ $a->user->name }}</p><p class="text-sm text-slate-400">{{ $a->user->candidateProfile->headline ?? '' }}</p><div class="mt-2 flex flex-wrap gap-1.5">@foreach($a->user->candidateProfile?->skills ?? [] as $s)<span class="rounded-full bg-white/5 px-2.5 py-1 text-xs">{{ $s->name }}</span>@endforeach</div><p class="mt-3 text-sm">Last stage: <x-badge :status="$a->status" /> · {{ $a->job->title }}</p><a class="mt-3 inline-block text-sm text-cyan-300 hover:underline" href="{{ route('employer.applicants.show', $a) }}">Review application →</a></div>@endforeach</div><div class="mt-6">{{ $pool->links() }}</div>@endif
+@endsection
